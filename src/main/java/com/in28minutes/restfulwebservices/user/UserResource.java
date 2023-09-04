@@ -3,6 +3,11 @@ package com.in28minutes.restfulwebservices.user;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,12 +34,15 @@ public class UserResource {
 	}
 	
 	@GetMapping(path = "/users/{idUser}")
-	public User retrieveUserById(@PathVariable Integer idUser){
+	public EntityModel<User> retrieveUserById(@PathVariable Integer idUser){
 		User user = userDaoService.findUserById(idUser);
 		if(user == null) {
 			throw new UserNotFoundException("idUser: "+ idUser);
 		}
-		return user;
+		EntityModel<User> entityModel = EntityModel.of(user);
+		WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+		entityModel.add(link.withRel("all-users"));
+		return entityModel;
 	}
 	
 	@PostMapping(path = "/users")
