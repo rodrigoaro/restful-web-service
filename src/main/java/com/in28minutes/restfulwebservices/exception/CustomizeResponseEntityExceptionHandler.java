@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.in28minutes.restfulwebservices.user.PostNotFoundException;
 import com.in28minutes.restfulwebservices.user.UserNotFoundException;
 
 @ControllerAdvice
@@ -46,6 +47,16 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
 									request.getDescription(false));
 		
 		return new ResponseEntity(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(PostNotFoundException.class)
+	public final ResponseEntity<ErrorDetails> handlePostNotFoundException(Exception ex, WebRequest request) throws Exception {
+	
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), 
+													ex.getMessage(), 
+													request.getDescription(false));
+		
+		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
 	}
 	
 }
