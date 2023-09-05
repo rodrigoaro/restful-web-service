@@ -80,7 +80,7 @@ public class UserJpaResource {
 	}
 	
 	@PostMapping(path = "/jpa/users/{idUser}/posts")
-	public ResponseEntity<Post> createPostForUser(@PathVariable Integer idUser, @Valid @RequestBody Post post) {
+	public ResponseEntity<Object> createPostForUser(@PathVariable Integer idUser, @Valid @RequestBody Post post) {
 		
 		Optional<User> user = userRepository.findById(idUser);
 		if(user.isEmpty()) {
